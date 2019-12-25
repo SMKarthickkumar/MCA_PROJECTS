@@ -1,0 +1,80 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using Garments.Models;
+
+namespace Garments.Controllers
+{
+    public class LoginController : Controller
+    {
+        //
+        // GET: /Login/
+        public ActionResult Index()
+        {
+            return View();
+        }
+        string strcon = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+        
+        [HttpPost]
+        public JsonResult Login(string  Username,string Password)
+        {
+            try
+            {
+                List<Login> lsLogin = new List<Login>();
+                SqlDataReader rd;
+                using (SqlConnection con = new SqlConnection(strcon))
+                {
+                    SqlCommand cmd = new SqlCommand("spLogin", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@UserName", Username);
+                  //  cmd.Parameters.AddWithValue("@EmailId", EmailId);
+                    cmd.Parameters.AddWithValue("@Password", Password);
+                    con.Open();
+                    rd = cmd.ExecuteReader();
+                    string Status = "";                 
+                    if (rd.HasRows)
+                    {
+                        while (rd.Read())
+                        {
+                            Login logobj = new Login();
+                            logobj.Id = Convert.ToInt32(rd["Id"].ToString());
+                            logobj.UserName = rd["EmailId"].ToString();
+                            logobj.Password = rd["Password"].ToString();
+                           // logobj.Type = rd["Type"].ToString();
+                            
+                            lsLogin.Add(logobj);
+                            Status = "Success";
+                        }
+                        Session["Login"] = lsLogin;
+                    }
+                    else
+                    {
+                        Status = "Invalid";
+                        Session["Login"] = "";
+                    }
+                    con.Close(); 
+                    var Result = new { Status = Status, List = lsLogin };
+                    return Json(Result, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                var Result = new { Status = "Error", Error = ex.Message };
+                return Json(Result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult LogOut()
+        {
+             Session["Login"]=""; 
+                return PartialView("~/Views/Login/Index.cshtml", "Login"); 
+        }
+    }
+}
+	
