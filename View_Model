@@ -1,0 +1,29 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace Garments.Models
+{
+    public class CustomerRegistration
+    {
+        public object FirstName { get; set; }
+
+        public object LastName { get; set; }
+
+        public object CompanyName { get; set; }
+
+        public object Address { get; set; }
+
+        public object PhoneNumber { get; set; }
+
+        public object EmailId { get; set; }
+
+        public object Password { get; set; }
+
+        public object ConformPassword { get; set; }
+
+        public int Id { get; set; }
+
+    }
+}
