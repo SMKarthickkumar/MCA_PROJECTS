@@ -1,0 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace Garments.Models
+{
+    public class Embroidering
+    {
+        public int Id { get; set; }
+        public string ProductId { get; set; }
+        public string CustomerName { get; set; }
+        public string DateOfStart { get; set; }
+        public string DateOfEnd { get; set; }
+        public int Count { get; set; }
+        public string Action { get; set; }
+    }
+}
