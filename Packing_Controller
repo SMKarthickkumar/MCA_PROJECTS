@@ -1,0 +1,162 @@
+//  Packing Controller it show the details in grid it perform insert update and delete operations
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using Garments.Models;
+
+namespace Garments.Controllers
+{
+    public class PackingController : Controller
+    {
+        //
+        // GET: /Packing/
+        public ActionResult Index()
+        {
+            return View();
+        }
+        string strcon = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+     // Save information
+     
+	 public JsonResult SavePacking(Packing Packobj)
+        {
+            try
+            {             
+                using (SqlConnection con = new SqlConnection(strcon))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("SavePacking", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Action", Packobj.Action);
+                    cmd.Parameters.AddWithValue("@Id", Packobj.Id);
+                    cmd.Parameters.AddWithValue("@ProductId", Packobj.ProductId);
+                    cmd.Parameters.AddWithValue("@CustomerName", Packobj.CustomerName);
+                    cmd.Parameters.AddWithValue("@DateOfStart", Packobj.DateOfStart);
+                    cmd.Parameters.AddWithValue("@DateOfEnd", Packobj.DateOfEnd);
+                    cmd.Parameters.AddWithValue("@Count", Packobj.Count);
+                    cmd.ExecuteNonQuery();
+                }
+                return Json("Success", JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+        
+        //  Get all values in the table
+        [HttpPost]
+		    public JsonResult GetPackingInfo()
+        {
+            try
+            {
+                List<Packing> Packing = new List<Packing>();
+                using (SqlConnection con = new SqlConnection(strcon))
+                {
+                    DataSet ds = new DataSet();
+                    SqlCommand cmd = new SqlCommand("GetPackingInfo", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    con.Open();
+                    SqlDataAdapter ad = new SqlDataAdapter(cmd);
+                    ad.Fill(ds);
+                    con.Close();
+                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                        Packing Pack = new Packing();
+                        Pack.Id = Convert.ToInt32(ds.Tables[0].Rows[i]["Id"]);
+                        //Pack.ProductId = Convert.ToInt32(ds.Tables[0].Rows[i]["ProductId"]);
+                        Pack.ProductId = ds.Tables[0].Rows[i]["ProductId"].ToString();
+                        Pack.CustomerName = ds.Tables[0].Rows[i]["CustomerName"].ToString();
+                        Pack.DateOfStart = ds.Tables[0].Rows[i]["DateOfStart"].ToString();
+                        Pack.DateOfEnd = ds.Tables[0].Rows[i]["DateOfEnd"].ToString();
+                        Pack.Count = Convert.ToInt32(ds.Tables[0].Rows[i]["Count"]);
+                     
+                        Packing.Add(Pack);
+                    }
+                }
+                return Json(Packing, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+        
+        //  Get particular id values
+        [HttpPost]
+        public JsonResult GetDetailById(int Id)
+        {
+            try
+            {
+                List<Packing> Packing = new List<Packing>();
+                SqlDataReader rd;
+                using (SqlConnection con = new SqlConnection(strcon))
+                {
+                    SqlCommand cmd = new SqlCommand("GetDetailById", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", Id);
+                    con.Open();
+                    rd = cmd.ExecuteReader();
+
+                    if (rd.HasRows)
+                    {
+                        while (rd.Read())
+                        {
+                            Packing Packobj = new Packing();
+                            //Packobj.Id = Convert.ToInt32(rd["Id"].ToString());
+                            Packobj.Id = Convert.ToInt32(rd["Id"].ToString());
+                            //Packobj.ProductId = Convert.ToInt32(rd["ProductId"].ToString());
+                            Packobj.ProductId = rd["ProductId"].ToString();
+                            Packobj.CustomerName = rd["CustomerName"].ToString();
+                           Packobj.DateOfStart = rd["DateOfStart"].ToString();
+                            Packobj.DateOfEnd = rd["DateOfEnd"].ToString();
+                            Packobj.Count = Convert.ToInt32(rd["Count"].ToString());
+                            Packing.Add(Packobj);
+                        }
+                    }
+                    con.Close();
+                }
+                var Result = new { Status = "Success", List = Packing };
+                return Json(Result, JsonRequestBehavior.AllowGet);
+            }
+             catch (Exception ex)
+            {
+                var Result = new { Status = "Error", Error = ex.Message };
+                return Json(Result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        // Delete by id values
+        [HttpPost]
+        public JsonResult DeleteDetails(int Id)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(strcon))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("DeleteById", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", Id);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                var Result = new { Status = "Success" };
+                return Json(Result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                var Result = new { Status = "Error", Error = ex.Message };
+                return Json(Result, JsonRequestBehavior.AllowGet);
+            }
+        }
+	}
+}
+
+
+
