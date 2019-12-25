@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace Garments.Models
+{
+    public class Delivery
+    {
+        public int Id { get; set; }
+        public string ProductId { get; set; }
+        public string CustomerName { get; set; }
+        public string DateOfDelivery { get; set; }
+        public int Count { get; set; }
+        public int Amount { get; set; }
+        public string Action { get; set; }
+    }
