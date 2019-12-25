@@ -1,0 +1,346 @@
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Delivery</h2>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddDelivery" id="ShowDelivery">Add New </button><br /><br />
+<table id="DeliveryTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead style="background-color: DodgerBlue;">
+        <tr>
+            <th>
+                Product ID
+            </th>
+            <th>
+                Customer Name
+            </th>
+            <th>
+                Date of Delivery
+            </th>
+            <th>
+                Count
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody id="ProductBody"></tbody>
+</table>
+
+<!-- Modal -->
+<div id="AddDelivery" class="modal fade" tabindex="-1" role="dialog">
+    <div id="DeliveryId" style="display:none;"></div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h4 class="modal-title" id="CompanyHeader">Modal Header</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="ProductId">Product ID</label>
+                            <input type="text" class="form-control" id="txtPrdtid" placeholder="Prodduct ID...">
+                        </div>
+                        <div class="form-group">
+                            <label for="CustomerName">Customer Name</label>
+                            <input type="text" class="form-control" id="txtCustName" placeholder="Customer Name...">
+                        </div>
+                        <!--   <div class="form-group">
+                               <label for="DateOfStart">Date Of Start</label>
+                               <input type="date" class="form-control" id="DOS" placeholder="Starting Date...">
+                           </div>  -->
+                        <div class="form-group">
+                            <label for="DeliveryDate">Date Of Delivery</label>
+                            <input type="date" class="form-control" id="DOD" placeholder="Delivery Date...">
+                        </div>
+                        <div class="form-group">
+                            <label for="Count">Count</label>
+                            <input type="text" class="form-control" id="txtCount" placeholder="Number of Count...">
+                        </div>
+                        <div class="form-group">
+                            <label for="Amount">Amount</label>
+                            <input type="text" class="form-control" id="txtAmount" placeholder="Amount...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnDeliveryInfo">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="ModalWarning" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h4 class="modal-title" id="CompanyHeader">Warning</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="WarningMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ModalSuccess" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h4 class="modal-title" id="CompanyHeader">Success</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="SuccessMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="ModalError" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title" id="CompanyHeader">Error</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="ErrorMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ModalConformation" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h4 class="modal-title" id="CompanyHeader">Information</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="ConformationMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnConfirmOk" class="btn btn-success">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        GetDeliveryInfo();
+        function GetDeliveryInfo() {
+            $.ajax({
+                url: "/Delivery/GetDeliveryInfo/",
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    var html = "";
+                    $.each(data, function (key, item) {
+                        debugger;
+                        html += '<tr>';
+                        html += '<td>' + item.ProductId + '</td>';
+                        html += '<td>' + item.CustomerName + '</td>';
+                        html += '<td>' + item.DateOfDelivery + '</td>';
+                        html += '<td>' + item.Count + '</td>';
+                        html += '<td>' + item.Amount + '</td>';
+                        html += '<td><a href="#" onclick="getbyID(' + item.Id + ')">Edit</a> | <a href="#" onclick="Delele(' + item.Id + ')">Delete</a></td>';
+                        html += '</tr>';
+                    });
+                    $('#ProductBody').html(html);
+                    $('#DeliveryTable').DataTable();
+
+                    debugger;
+                }
+            });
+        }
+
+        $("#ShowDelivery").click(function () {
+
+            debugger;
+            $("#DeliveryId").html("0");
+            $("#CompanyHeader").html("Delivery Info");
+            $("#txtPrdtid").val();
+            $("#txtCustName").val();
+            $("#DOD").val();
+            $("#txtCount").val();
+            $("#txtAmount").val();
+
+            $("#AddDelivery").modal("show");
+        });
+
+        $("#btnDeliveryInfo").click(function () {
+            debugger;
+            GetDeliveryInfo();
+            if (validateDelivery()) {
+                var Action = "";
+                if ($("#DeliveryId").html() == "0") {
+                    Action = "Add"
+                }
+                else {
+                    Action = "Edit"
+                }
+
+                var Deliveryobj = {
+                    Action: Action,
+                    ProductId: $('#txtPrdtid').val(),
+                    CustomerName: $('#txtCustName').val(),
+                    DateOfDelivery: $('#DOD').val(),
+                    Count: $('#txtCount').val(),
+                    Amount: $('#txtAmount').val(),
+                    Id: $('#DeliveryId').html()
+                };
+                $.ajax({
+                    url: "/Delivery/SaveDelivery",
+                    data: JSON.stringify(Deliveryobj),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        if (result == "Success") {
+
+                            $('#AddDelivery').modal('hide');
+                            $('#ModalSuccess').modal('show');
+                            $('#SuccessMessage').html("Saved Successfully...");
+                        }
+                        else {
+                            $('#ModalError').modal('show');
+                            $('#ErrorMessage').html(result);
+                        }
+                    },
+                    error: function (errormessage) {
+                        $('#ModalError').modal('show');
+                        $("#ErrorMessage").html(errormessage.responseText);
+                    }
+                });
+            }
+        });
+        $("#btnConfirmOk").click(function () {
+            debugger;
+            $('#ModalConformation').modal('hide');
+            DeleteDetails($("#PackingId").html());
+        });
+    });
+
+    function validateDelivery() {
+        if ($("#txtPrdtid").val() == "") {
+            $("#ModalWarning").modal("show");
+            $("#WarningMessage").html("Product is required!")
+            return false;
+        }
+        else if ($("#txtCustName").val() == "") {
+            $("#ModalWarning").modal("show");
+            $("#WarningMessage").html("Customer Name is required!")
+            return false;
+        }
+        else if ($("#DOD").val() == "") {
+            $("#ModalWarning").modal("show");
+            $("#WarningMessage").html("Delivery Date is required!")
+            return false;
+        }
+        else if ($("#txtCount").val() == "") {
+            $("#ModalWarning").modal("show");
+            $("#WarningMessage").html("Cout is required!")
+            return false;
+        }
+        else if ($("#txtAmount").val() == "") {
+            $("#ModalWarning").modal("show");
+            $("#WarningMessage").html("Amount is required!")
+            return false;
+        }
+        return true;
+    }
+
+
+    function getbyID(Id) {
+        debugger;
+        $.ajax({
+            url: "/Delivery/GetDetailById/" + Id,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+
+            success: function (result) {
+                debugger;
+                if (result.Status == "Success") {
+                    $('#AddDelivery').modal('show');
+                    $("#DeliveryId").html();
+                    $("#CompanyHeader").html("Edit Company");
+                    $("#txtPrdtid").val(result.List[0].ProductId);
+                    $("#txtCustName").val(result.List[0].CustomerName);
+                    $("#DOD").val(result.List[0].DateOfStart);
+                    $("#txtCount").val(result.List[0].DateOfEnd);
+                    $("#txtAmount").val(result.List[0].Count);
+                    $("#DeliveryId").html(result.List[0].Id);
+                    //$("#Id").html(result.List[0].Id);
+                } else {
+                    $('#ModalError').modal('show');
+                    $("#ErrorMessage").html(result.Error);
+                }
+            },
+            error: function (errormessage) {
+                $('#ModalError').modal('show');
+                $("#ErrorMessage").html(errormessage.responseText);
+            }
+        });
+        return false;
+    }
+
+    function Delele(ID) {
+        debugger;
+        $("#DeliveryId").html(ID);
+        $('#ModalConformation').modal('show');
+        $("#ConformationMessage").html("Are you sure want to delete?");
+    }
+    function DeleteDetails(ID) {
+        debugger;
+
+        $.ajax({
+            url: "/Delivery/DeleteDetails/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                debugger;
+                if (result.Status == "Success") {
+                    GetDeliveryInfo();
+                    $('#ModalSuccess').modal('show');
+                    $("#SuccessMessage").html("deleted succefully...");
+                } else {
+                    $('#ModalError').modal('show');
+                    $("#ErrorMessage").html(result.Error);
+                }
+            },
+            error: function (errormessage) {
+                $('#ModalError').modal('show');
+                $("#ErrorMessage").html(errormessage.responseText);
+            }
+        });
+    }
+</script>
+
