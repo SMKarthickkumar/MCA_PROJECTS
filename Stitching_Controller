@@ -1,0 +1,155 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using Garments.Models;
+
+namespace Garments.Controllers
+{
+    public class StitchingController : Controller
+    {
+        // GET: /Stitching/
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        string strcon = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+		// Save value
+        public JsonResult SaveStitching(Stitching Stitchobj)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(strcon))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("SaveStitching", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Action", Stitchobj.Action);
+                    cmd.Parameters.AddWithValue("@Id", Stitchobj.Id);
+                    cmd.Parameters.AddWithValue("@ProductId", Stitchobj.ProductId);
+                    cmd.Parameters.AddWithValue("@CustomerName", Stitchobj.CustomerName);
+                    cmd.Parameters.AddWithValue("@DateOfStart", Stitchobj.DateOfStart);
+                    cmd.Parameters.AddWithValue("@DateOfEnd", Stitchobj.DateOfEnd);
+                    cmd.Parameters.AddWithValue("@Count", Stitchobj.Count);
+                    cmd.ExecuteNonQuery();
+                }
+                return Json("Success", JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+		// get all value
+        public JsonResult GetStitchingInfo()
+        {
+            try
+            {
+                List<Stitching> Stitching = new List<Stitching>();
+                using (SqlConnection con = new SqlConnection(strcon))
+                {
+                    DataSet ds = new DataSet();
+                    SqlCommand cmd = new SqlCommand("GetStitchingInfo", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    con.Open();
+                    SqlDataAdapter ad = new SqlDataAdapter(cmd);
+                    ad.Fill(ds);
+                    con.Close();
+                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                        Stitching Stitch = new Stitching();
+                        Stitch.Id = Convert.ToInt32(ds.Tables[0].Rows[i]["Id"]);
+                        //Pack.ProductId = Convert.ToInt32(ds.Tables[0].Rows[i]["ProductId"]);
+                        Stitch.ProductId = ds.Tables[0].Rows[i]["ProductId"].ToString();
+                        Stitch.CustomerName = ds.Tables[0].Rows[i]["CustomerName"].ToString();
+                        Stitch.DateOfStart = ds.Tables[0].Rows[i]["DateOfStart"].ToString();
+                        Stitch.DateOfEnd = ds.Tables[0].Rows[i]["DateOfEnd"].ToString();
+                        Stitch.Count = Convert.ToInt32(ds.Tables[0].Rows[i]["Count"]);
+
+                        Stitching.Add(Stitch);
+                    }
+                }
+                return Json(Stitching, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+		// get id by value
+        [HttpPost]
+        public JsonResult GetDetailById(int Id)
+        {
+            try
+            {
+                List<Stitching> Stitching = new List<Stitching>();
+                SqlDataReader rd;
+                using (SqlConnection con = new SqlConnection(strcon))
+                {
+                    SqlCommand cmd = new SqlCommand("GetDetailByIdS", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", Id);
+                    con.Open();
+                    rd = cmd.ExecuteReader();
+
+                    if (rd.HasRows)
+                    {
+                        while (rd.Read())
+                        {
+                            Stitching Stchobj = new Stitching();
+                            //Packobj.Id = Convert.ToInt32(rd["Id"].ToString());
+                            Stchobj.Id = Convert.ToInt32(rd["Id"].ToString());
+                            //Packobj.ProductId = Convert.ToInt32(rd["ProductId"].ToString());
+                            Stchobj.ProductId = rd["ProductId"].ToString();
+                            Stchobj.CustomerName = rd["CustomerName"].ToString();
+                            Stchobj.DateOfStart = rd["DateOfStart"].ToString();
+                            Stchobj.DateOfEnd = rd["DateOfEnd"].ToString();
+                            Stchobj.Count = Convert.ToInt32(rd["Count"].ToString());
+                            Stitching.Add(Stchobj);
+                        }
+                    }
+                    con.Close();
+                }
+                var Result = new { Status = "Success", List = Stitching };
+                return Json(Result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                var Result = new { Status = "Error", Error = ex.Message };
+                return Json(Result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+		// Delete id by value
+        [HttpPost]
+        public JsonResult DeleteDetails(int Id)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(strcon))
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("DeleteByIdS", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", Id);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                var Result = new { Status = "Success" };
+                return Json(Result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                var Result = new { Status = "Error", Error = ex.Message };
+                return Json(Result, JsonRequestBehavior.AllowGet);
+            }
+        }
+	}
+}
