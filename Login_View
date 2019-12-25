@@ -1,0 +1,230 @@
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login V12</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+  <!--  <link rel="icon" type="image/png" href="images/icons/favicon.ico" />  -->
+    <link rel="icon" type="image/png" href="~/Image/Login_images/icons/favicon.ico" />
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="~/vendor/bootstrap/css/bootstrap.min.css">-->
+    <link href="~/vendor/Login_vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="~/fonts/font-awesome-4.7.0/css/font-awesome.min.css">-->
+    <link href="~/fonts/Login_fonts/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="~/fonts/Linearicons-Free-v1.0.0/icon-font.min.css"> -->
+    <link href="~/fonts/Login_fonts/Linearicons-Free-v1.0.0/icon-font.min.css" rel="stylesheet" />
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="~/vendor/animate/animate.css"> -->
+    <link href="~/vendor/Login_vendor/animate/animate.css" rel="stylesheet" />
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="~/vendor/css-hamburgers/hamburgers.min.css">-->
+    <link href="~/vendor/Login_vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" />
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="~/vendor/select2/select2.min.css">-->
+    <link href="~/vendor/Login_vendor/select2/select2.min.css" rel="stylesheet" />
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="~/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/css/main_L.css">-->
+    <link href="~/Css/Login_css/util.css" rel="stylesheet" />
+    <link href="~/Css/Login_css/main.css" rel="stylesheet" />
+    <!--===============================================================================================-->
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link href="~/Css/bootstrap.css" rel="stylesheet" />
+    <script src="~/Js/bootstrap.js"></script>
+</head>
+<body>
+<!-- Login Page -->
+    <div class="limiter">
+        <div class="container-login100" style="background-image: url('images/img-01.jpg');">
+            <div class="wrap-login100 p-t-190 p-b-30">
+                <form class="login100-form validate-form">
+                    <div class="login100-form-avatar">
+                       <!-- <img src="~/images/Login_images/avatar-01.jpg" alt="AVATAR"> 
+                        <img src="~/Image/Login_images/avatar-01.jpg" /> -->
+                        <img src="~/Image/Login_images/rr_logo.jpg" />
+                    </div>
+                    <span class="login100-form-title p-t-20 p-b-45">
+                        RR Son's Garments
+                    </span>
+                    <div class="wrap-input100 validate-input m-b-10" data-validate="Username is required">
+                        <input class="input100" type="email" name="username" id="txtEmail" placeholder="Username">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="fa fa-user"></i>
+                        </span>
+                    </div>
+                    <div class="wrap-input100 validate-input m-b-10" data-validate="Password is required">
+                        <input class="input100" type="password" name="pass" id="txtPassword" placeholder="Password">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                    </div>
+                    <div class="container-login100-form-btn p-t-10">
+                        <button class="login100-form-btn" id="btnLogin">
+                            Login
+                        </button>
+                    </div>
+                    <div class="text-center w-full p-t-25 p-b-230">
+                        <a href="/ForgetPassword/Index/" class="txt1" id="frgPassword">
+                            Forgot Username / Password?
+                        </a>
+                    </div>
+                    <div class="text-center w-full">
+                        <a class="txt1" href="/CustomerRegistration/Index/">
+                            Create new account
+                            <i class="fa fa-long-arrow-right"></i>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--===============================================================================================-->
+    <!--<script src="~/vendor/jquery/jquery-3.2.1.min.js"></script>-->
+    <script src="~/vendor/Login_vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <!--<script src="~/vendor/bootstrap/js/popper.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.min.js"></script>-->
+    <script src="~/vendor/Login_vendor/bootstrap/js/popper.js"></script>
+    <script src="~/vendor/Login_vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!--===============================================================================================-->
+    <!--<script src="~/vendor/select2/select2.min.js"></script>-->
+    <link href="~/vendor/Login_vendor/select2/select2.min.css" rel="stylesheet" />
+
+    <!--===============================================================================================-->
+    <!--<script src="~/js/main_L.js"></script>-->
+    <script src="~/Js/Login_js/main.js"></script>
+</body>
+</html>
+
+<!-- Warning Message Model -->
+
+<div id="ModalWarning" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h4 class="modal-title" id="CompanyHeader">Warning</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="WarningMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error Message Model -->
+
+<div id="ModalError" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title" id="CompanyHeader">Error</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="ErrorMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Information Message Model -->
+
+<div id="ModalInformation" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h4 class="modal-title" id="InfHeader">Information</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="SuccessMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Jquery Script -->
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#txtEmail").val("");
+        $("#txtPassword").val("");
+        $("#btnLogin").click(function () {
+            Login();
+        });
+    });
+
+    function Login() {
+        debugger;
+        if (ValidateLogin()) {
+            var username = $("#txtEmail").val();
+            var password = $("#txtPassword").val();
+            var data = {
+                Username: username,
+                Password: password
+            };
+            $.ajax({
+                url: "/Login/Login",
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (result) {
+                    debugger;
+                    if (result.Status == "Success") {
+
+                        window.location = "/Delivery/Index/";
+                    }
+                    else if (result.Status == "Invalid") {
+                        $('#ModalError').modal('show');
+                        $("#ErrorMessage").html("Invalid user");
+                    } else {
+                        $('#ModalError').modal('show');
+                        $("#ErrorMessage").html(result.Error);
+                    }
+                },
+                error: function (errormessage) {
+                    $('#ModalError').modal('show');
+                    $("#ErrorMessage").html(errormessage.responseText);
+                }
+            });
+            return false;
+        }
+    }
+
+    function ValidateLogin() {
+        if ($("#txtEmail").val() == "") {
+            $("#ModalWarning").modal("show");
+            $("#WarningMessage").html("Username is required!")
+            return false;
+        }
+        else if ($("#txtPassword").val() == "") {
+            $("#ModalWarning").modal("show");
+            $("#WarningMessage").html("Password is required!")
+            return false;
+        }
+        return true;
+    }
+
+</script>
